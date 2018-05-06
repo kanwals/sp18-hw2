@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
+import static java.lang.Math.toIntExact;
 
 public class GlobeSortServer {
     private Server server;
@@ -86,12 +87,17 @@ public class GlobeSortServer {
 
         @Override
         public void sortIntegers(IntArray req, final StreamObserver<IntArray> responseObserver) {
+
+            long t1 = System.currentTimeMillis();
             Integer[] values = req.getValuesList().toArray(new Integer[req.getValuesList().size()]);
             Arrays.sort(values);
             IntArray.Builder responseBuilder = IntArray.newBuilder();
             for(Integer val : values) {
                 responseBuilder.addValues(val);
             }
+            long t2 = System.currentTimeMillis();
+            // add the time taken to sort in msec at the end of the sorted list.
+            responseBuilder.addValues(toIntExact(t2-t1));
             IntArray response = responseBuilder.build();
             responseObserver.onNext(response);
             responseObserver.onCompleted();
