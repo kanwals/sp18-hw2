@@ -98,6 +98,7 @@ public class GlobeSortServer {
             long t2 = System.currentTimeMillis();
             // add the time taken to sort in msec at the end of the sorted list.
             responseBuilder.addValues(toIntExact(t2-t1));
+            System.out.println("Sort completed in (msecs): " + (t2-t1));
             IntArray response = responseBuilder.build();
             responseObserver.onNext(response);
             responseObserver.onCompleted();

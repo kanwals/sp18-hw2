@@ -52,10 +52,14 @@ public class GlobeSortClient {
         long t3 = System.currentTimeMillis();
         IntArray response = serverStub.sortIntegers(request);
         long t4 = System.currentTimeMillis();
-        long applicationThroughput = (values.length/(1000*(t4-t3)));
-        long networkThroughput = (t4-t3-response.getValues(values.length))/2;
+        long applicationThroughput = (values.length*1000/(t4-t3));
+        long networkThroughputSecs = (t4-t3-response.getValues(values.length))/(2*1000);
+        long networkThroughput = values.length/networkThroughputSecs;
         System.out.println("Sorted array received. Num Records: " +values.length+ ". Application Throughput(records/sec): " +applicationThroughput);
-        System.out.println("Time taken by server to sort:" +response.getValues(values.length)+". Network Throughput: "+networkThroughput);
+        System.out.println("Time taken by server to sort(msec): "
+                +response.getValues(values.length)+
+                ". One way Network Throughput Secs: "+networkThroughputSecs+
+                ". One way Network Throughput: "+networkThroughput);
     }
 
     public void shutdown() throws InterruptedException {
